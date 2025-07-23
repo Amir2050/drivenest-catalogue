@@ -1,0 +1,374 @@
+{
+  "catalog_info": {
+    "name": "DriveNestTrack Car Parts Catalog",
+    "version": "1.0.0",
+    "created_by": "Ronzoro & Base44 AI",
+    "description": "Open-source car parts database for marketplace applications",
+    "last_updated": "2024-07-23",
+    "total_parts": 25
+  },
+  "parts": [
+    {
+      "id": "DNT001",
+      "part_name": "Premium Ceramic Brake Pads - Front Set",
+      "part_number": "BP-CERAMIC-F001",
+      "brand": "StopTech",
+      "compatible_vehicles": [
+        "Honda Accord 2018-2023",
+        "Honda CR-V 2017-2022",
+        "Acura TLX 2015-2020"
+      ],
+      "category": "brake",
+      "price": 89.99,
+      "stock_quantity": 24,
+      "description": "High-performance ceramic brake pads offering superior stopping power, reduced dust, and extended rotor life. Perfect for daily driving and light performance use."
+    },
+    {
+      "id": "DNT002",
+      "part_name": "Heavy Duty Car Battery",
+      "part_number": "BAT-HD-65",
+      "brand": "Interstate",
+      "compatible_vehicles": [
+        "Ford F-150 2015-2023",
+        "Ford Explorer 2016-2023",
+        "Lincoln Navigator 2018-2023"
+      ],
+      "category": "electrical",
+      "price": 149.95,
+      "stock_quantity": 18,
+      "description": "65Ah maintenance-free battery with 650 cold cranking amps. Features advanced calcium technology for longer life and reliable starting power in all weather conditions."
+    },
+    {
+      "id": "DNT003",
+      "part_name": "High-Flow Engine Air Filter",
+      "part_number": "AF-PERF-334",
+      "brand": "K&N",
+      "compatible_vehicles": [
+        "Toyota Camry 2018-2023",
+        "Toyota RAV4 2019-2023",
+        "Lexus ES 2019-2023"
+      ],
+      "category": "engine",
+      "price": 54.99,
+      "stock_quantity": 32,
+      "description": "Washable, reusable cotton air filter that increases airflow for improved acceleration and engine sound. Million-mile limited warranty included."
+    },
+    {
+      "id": "DNT004",
+      "part_name": "LED Headlight Conversion Kit H11",
+      "part_number": "LED-H11-6000K",
+      "brand": "Philips",
+      "compatible_vehicles": [
+        "Nissan Altima 2016-2023",
+        "Nissan Sentra 2020-2023",
+        "Infiniti Q50 2014-2020"
+      ],
+      "category": "lighting",
+      "price": 79.99,
+      "stock_quantity": 15,
+      "description": "6000K bright white LED headlight bulbs with 160% more light output than standard halogen. Easy plug-and-play installation with built-in cooling system."
+    },
+    {
+      "id": "DNT005",
+      "part_name": "Front Strut Assembly Complete",
+      "part_number": "STRUT-F-MON558",
+      "brand": "Monroe",
+      "compatible_vehicles": [
+        "BMW 3 Series 2012-2018",
+        "BMW X3 2011-2017"
+      ],
+      "category": "suspension",
+      "price": 234.50,
+      "stock_quantity": 8,
+      "description": "Complete strut assembly with coil spring and upper mount. Gas-charged for consistent performance and enhanced ride comfort. Direct OE replacement."
+    },
+    {
+      "id": "DNT006",
+      "part_name": "Mass Air Flow Sensor",
+      "part_number": "MAF-BOSCH-0280",
+      "brand": "Bosch",
+      "compatible_vehicles": [
+        "Mercedes-Benz C-Class 2015-2021",
+        "Mercedes-Benz E-Class 2017-2023",
+        "Mercedes-Benz GLC 2016-2023"
+      ],
+      "category": "engine",
+      "price": 189.75,
+      "stock_quantity": 12,
+      "description": "OEM-quality mass airflow sensor ensuring precise air measurement for optimal fuel economy and engine performance. Direct fit replacement."
+    },
+    {
+      "id": "DNT007",
+      "part_name": "All-Weather Floor Mats Set",
+      "part_number": "MAT-WEATHER-4PC",
+      "brand": "WeatherTech",
+      "compatible_vehicles": [
+        "Chevrolet Silverado 2019-2023",
+        "GMC Sierra 2019-2023"
+      ],
+      "category": "interior",
+      "price": 129.95,
+      "stock_quantity": 20,
+      "description": "Custom-fit all-weather floor liners with raised edges to contain spills and debris. Made from odorless, BPA-free materials in classic black."
+    },
+    {
+      "id": "DNT008",
+      "part_name": "Fuel Pump Assembly Electric",
+      "part_number": "FP-ELEC-E8545M",
+      "brand": "Delphi",
+      "compatible_vehicles": [
+        "Dodge Charger 2011-2019",
+        "Dodge Challenger 2015-2023",
+        "Chrysler 300 2011-2019"
+      ],
+      "category": "fuel_system",
+      "price": 298.00,
+      "stock_quantity": 6,
+      "description": "Complete electric fuel pump module assembly with sending unit and fuel level sensor. Tested to meet OE specifications for reliable fuel delivery."
+    },
+    {
+      "id": "DNT009",
+      "part_name": "Cabin Air Filter Activated Carbon",
+      "part_number": "CAF-CARBON-CF123",
+      "brand": "FRAM",
+      "compatible_vehicles": [
+        "Subaru Outback 2015-2023",
+        "Subaru Legacy 2015-2023",
+        "Subaru Ascent 2019-2023"
+      ],
+      "category": "hvac",
+      "price": 24.99,
+      "stock_quantity": 45,
+      "description": "Activated carbon cabin filter that removes allergens, dust, and odors from incoming air. Easy 15-minute replacement maintains clean cabin air quality."
+    },
+    {
+      "id": "DNT010",
+      "part_name": "Radiator Upper Hose",
+      "part_number": "HOSE-RAD-UP-22055",
+      "brand": "Gates",
+      "compatible_vehicles": [
+        "Ford Mustang 2015-2023",
+        "Ford Focus ST 2013-2018"
+      ],
+      "category": "cooling",
+      "price": 38.75,
+      "stock_quantity": 28,
+      "description": "Premium EPDM rubber radiator hose with reinforced construction. Superior heat and pressure resistance for reliable cooling system performance."
+    },
+    {
+      "id": "DNT011",
+      "part_name": "Rear Brake Rotors Set",
+      "part_number": "ROTOR-R-SET-580",
+      "brand": "Raybestos",
+      "compatible_vehicles": [
+        "Jeep Grand Cherokee 2011-2021",
+        "Dodge Durango 2011-2023"
+      ],
+      "category": "brake",
+      "price": 156.90,
+      "stock_quantity": 14,
+      "description": "Professional-grade disc brake rotors with advanced metallurgy and precision machining. Enhanced cooling vanes prevent warping and extend pad life."
+    },
+    {
+      "id": "DNT012",
+      "part_name": "Windshield Wiper Blade Set",
+      "part_number": "WIPER-ICON-26-16",
+      "brand": "Bosch",
+      "compatible_vehicles": [
+        "Volkswagen Jetta 2011-2018",
+        "Volkswagen Passat 2012-2019",
+        "Audi A4 2009-2016"
+      ],
+      "category": "exterior",
+      "price": 42.50,
+      "stock_quantity": 36,
+      "description": "Icon beam wiper blades with exclusive tension spring technology. Provides streak-free wiping in all weather conditions with easy installation."
+    },
+    {
+      "id": "DNT013",
+      "part_name": "Oxygen Sensor Downstream",
+      "part_number": "O2-SENSOR-DS-234",
+      "brand": "Denso",
+      "compatible_vehicles": [
+        "Toyota Corolla 2014-2022",
+        "Toyota C-HR 2018-2023",
+        "Scion iM 2016-2017"
+      ],
+      "category": "engine",
+      "price": 94.25,
+      "stock_quantity": 22,
+      "description": "Precision-engineered oxygen sensor for accurate air-fuel mixture monitoring. Helps maintain optimal engine performance and emission compliance."
+    },
+    {
+      "id": "DNT014",
+      "part_name": "Power Steering Pump Remanufactured",
+      "part_number": "PS-PUMP-REMAN-20-1006",
+      "brand": "Cardone",
+      "compatible_vehicles": [
+        "Honda Pilot 2009-2015",
+        "Acura MDX 2007-2013"
+      ],
+      "category": "steering",
+      "price": 189.99,
+      "stock_quantity": 9,
+      "description": "Remanufactured power steering pump with new seals and internal components. Tested to ensure smooth, quiet operation and proper pressure output."
+    },
+    {
+      "id": "DNT015",
+      "part_name": "Tail Light Assembly Left",
+      "part_number": "TAIL-L-LED-508",
+      "brand": "TYC",
+      "compatible_vehicles": [
+        "Hyundai Elantra 2017-2020",
+        "Hyundai Elantra GT 2018-2020"
+      ],
+      "category": "lighting",
+      "price": 98.40,
+      "stock_quantity": 16,
+      "description": "DOT and SAE compliant LED tail light assembly with red lens and integrated turn signal. Direct replacement for factory unit."
+    },
+    {
+      "id": "DNT016",
+      "part_name": "Engine Mount Hydraulic Front",
+      "part_number": "ENG-MNT-HYD-5435",
+      "brand": "Febi",
+      "compatible_vehicles": [
+        "Mazda CX-5 2013-2021",
+        "Mazda CX-9 2016-2023",
+        "Mazda 6 2014-2021"
+      ],
+      "category": "engine",
+      "price": 85.60,
+      "stock_quantity": 19,
+      "description": "Hydraulic engine mount designed to reduce vibration and noise transmission. Features durable rubber construction with integrated fluid dampening."
+    },
+    {
+      "id": "DNT017",
+      "part_name": "Serpentine Belt Multi-Rib",
+      "part_number": "BELT-SERP-6PK1865",
+      "brand": "Continental",
+      "compatible_vehicles": [
+        "Kia Sorento 2016-2023",
+        "Kia Optima 2016-2020",
+        "Hyundai Santa Fe 2013-2018"
+      ],
+      "category": "engine",
+      "price": 29.95,
+      "stock_quantity": 42,
+      "description": "High-performance multi-rib serpentine belt with superior flexibility and durability. Engineered to resist stretching, cracking, and premature wear."
+    },
+    {
+      "id": "DNT018",
+      "part_name": "Door Handle Exterior Chrome Right",
+      "part_number": "HANDLE-EXT-CHR-R80587",
+      "brand": "Dorman",
+      "compatible_vehicles": [
+        "Ford Escape 2013-2019",
+        "Ford Focus 2012-2018"
+      ],
+      "category": "exterior",
+      "price": 67.85,
+      "stock_quantity": 25,
+      "description": "Chrome-finished exterior door handle with integrated key cylinder housing. Direct replacement part with OE-style mounting and operation."
+    },
+    {
+      "id": "DNT019",
+      "part_name": "Alternator 140 Amp Remanufactured",
+      "part_number": "ALT-140A-REMAN-210",
+      "brand": "Bosch",
+      "compatible_vehicles": [
+        "Chevrolet Malibu 2016-2023",
+        "Chevrolet Equinox 2018-2023",
+        "Buick Encore 2013-2022"
+      ],
+      "category": "electrical",
+      "price": 245.75,
+      "stock_quantity": 11,
+      "description": "140-amp remanufactured alternator with new bearings, slip rings, and rectifier diodes. Includes pulley and provides reliable charging system performance."
+    },
+    {
+      "id": "DNT020",
+      "part_name": "Control Arm Lower Front Left",
+      "part_number": "CTRL-ARM-L-F-620273",
+      "brand": "Moog",
+      "compatible_vehicles": [
+        "Volvo XC90 2016-2023",
+        "Volvo XC60 2018-2023"
+      ],
+      "category": "suspension",
+      "price": 178.50,
+      "stock_quantity": 13,
+      "description": "Problem Solver lower control arm with enhanced bushings and ball joint. Engineered to address common wear issues and extend service life."
+    },
+    {
+      "id": "DNT021",
+      "part_name": "Spark Plug Set Iridium",
+      "part_number": "SPARK-IRID-6619-4PC",
+      "brand": "NGK",
+      "compatible_vehicles": [
+        "Mitsubishi Outlander 2014-2022",
+        "Mitsubishi Eclipse Cross 2018-2023"
+      ],
+      "category": "engine",
+      "price": 76.00,
+      "stock_quantity": 31,
+      "description": "Set of 4 iridium spark plugs with fine-wire center electrode for improved ignitability and longer life. Provides better fuel economy and reduced emissions."
+    },
+    {
+      "id": "DNT022",
+      "part_name": "Backup Camera Rear View",
+      "part_number": "CAM-BACKUP-HD-720",
+      "brand": "Pioneer",
+      "compatible_vehicles": [
+        "Universal Fit - Most Vehicles 2010-2023"
+      ],
+      "category": "electronics",
+      "price": 129.99,
+      "stock_quantity": 27,
+      "description": "HD 720p backup camera with 170-degree viewing angle and night vision capability. Includes mounting hardware and 20ft extension cable."
+    },
+    {
+      "id": "DNT023",
+      "part_name": "Timing Chain Kit Complete",
+      "part_number": "TIMING-CHAIN-K025578",
+      "brand": "Cloyes",
+      "compatible_vehicles": [
+        "Infiniti G37 2008-2013",
+        "Nissan 370Z 2009-2020",
+        "Infiniti Q60 2014-2017"
+      ],
+      "category": "engine",
+      "price": 387.25,
+      "stock_quantity": 4,
+      "description": "Complete timing chain kit with chains, tensioners, guides, and gaskets. Precision-manufactured components ensure proper valve timing and engine longevity."
+    },
+    {
+      "id": "DNT024",
+      "part_name": "Wheel Bearing Hub Assembly Front",
+      "part_number": "HUB-BEARING-F-515087",
+      "brand": "Timken",
+      "compatible_vehicles": [
+        "Cadillac CTS 2008-2014",
+        "Cadillac STS 2005-2011"
+      ],
+      "category": "wheel_bearing",
+      "price": 143.90,
+      "stock_quantity": 17,
+      "description": "Complete wheel bearing and hub assembly with integrated ABS tone ring. Precision-manufactured for smooth rotation and long service life."
+    },
+    {
+      "id": "DNT025",
+      "part_name": "Catalytic Converter Direct Fit",
+      "part_number": "CAT-CONV-DIR-49905",
+      "brand": "MagnaFlow",
+      "compatible_vehicles": [
+        "Honda Civic 2012-2015",
+        "Acura ILX 2013-2015"
+      ],
+      "category": "exhaust",
+      "price": 289.50,
+      "stock_quantity": 7,
+      "description": "EPA-compliant direct-fit catalytic converter with stainless steel construction. Features advanced catalyst technology for superior emission reduction and performance."
+    }
+  ]
+}
