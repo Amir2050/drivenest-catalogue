@@ -1,0 +1,26 @@
+[
+  {
+    "id": "DNT001",
+    "part_name": "Premium Ceramic Brake Pads - Front Set",
+    "part_number": "BP-CERAMIC-F001",
+    "brand": "StopTech",
+    "compatible_vehicles": "Honda Accord 2018-2023; Honda CR-V 2017-2022; Acura TLX 2015-2020",
+    "category": "brake",
+    "price": 89.99,
+    "stock_quantity": 24,
+    "description": "High-performance ceramic brake pads offering superior stopping power, reduced dust, and extended rotor life. Perfect for daily driving and light performance use."
+  },
+  {
+    "id": "DNT002",
+    "part_name": "Heavy Duty Car Battery",
+    "part_number": "BAT-HD-65",
+    "brand": "Interstate",
+    "compatible_vehicles": "Ford F-150 2015-2023; Ford Explorer 2016-2023; Lincoln Navigator 2018-2023",
+    "category": "electrical",
+    "price": 149.95,
+    "stock_quantity": 18,
+    "description": "65Ah maintenance-free battery with 650 cold cranking amps. Features advanced calcium technology for longer life and reliable starting power in all weather conditions."
+  },
+  ...
+  // continue until DNT025
+]
