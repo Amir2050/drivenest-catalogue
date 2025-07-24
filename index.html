@@ -1,12 +1,99 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DriveNest Catalogue</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DriveNest Parts Catalogue</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      color: #004d99;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+      margin-bottom: 20px;
+    }
+    .catalogue {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .part-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      width: 300px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .part-card h3 {
+      margin-top: 0;
+      color: #007acc;
+    }
+    .tag {
+      font-size: 12px;
+      background: #eee;
+      padding: 4px 6px;
+      border-radius: 4px;
+      margin-right: 5px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to DriveNest Parts Catalogue</h1>
-  <p>This site will soon list car parts, specs, and more. Stay tuned!</p>
+  <h1>DriveNest Parts Catalogue</h1>
+  <input type="text" id="search" placeholder="Search by part name, vehicle, or category..." />
+
+  <div id="catalogue" class="catalogue"></div>
+
+  <script>
+    async function loadParts() {
+      const res = await fetch('parts.json');
+      const data = await res.json();
+      const parts = data.parts;
+
+      const catalogue = document.getElementById('catalogue');
+      const searchInput = document.getElementById('search');
+
+      function render(filteredParts) {
+        catalogue.innerHTML = '';
+        filteredParts.forEach(part => {
+          const card = document.createElement('div');
+          card.className = 'part-card';
+          card.innerHTML = `
+            <h3>${part.part_name}</h3>
+            <p><strong>Brand:</strong> ${part.brand}</p>
+            <p><strong>Category:</strong> <span class="tag">${part.category}</span></p>
+            <p><strong>Price:</strong> $${part.price}</p>
+            <p>${part.description}</p>
+          `;
+          catalogue.appendChild(card);
+        });
+      }
+
+      // Initial render
+      render(parts);
+
+      searchInput.addEventListener('input', () => {
+        const term = searchInput.value.toLowerCase();
+        const filtered = parts.filter(p =>
+          p.part_name.toLowerCase().includes(term) ||
+          p.brand.toLowerCase().includes(term) ||
+          p.category.toLowerCase().includes(term) ||
+          p.compatible_vehicles.some(v => v.toLowerCase().includes(term))
+        );
+        render(filtered);
+      });
+    }
+
+    loadParts();
+  </script>
 </body>
 </html>
+
