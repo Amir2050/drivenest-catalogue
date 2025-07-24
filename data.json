@@ -1,52 +1,42 @@
 [
   {
-    "part_name": "Brake Pad Set - Front",
-    "part_number": "BP1320F",
-    "brand": "Brembo",
-    "compatible_vehicles": "Toyota Camry 2018-2022",
+    "id": "p001",
+    "name": "Brake Pad Set",
+    "vehicle": "Toyota Camry 2015-2019",
     "category": "Brakes",
-    "price": 79.99,
-    "stock_quantity": 120,
-    "description": "High-performance front brake pads offering superior stopping power and reduced brake dust."
+    "price": 49.99,
+    "stock": 20
   },
   {
-    "part_name": "Oil Filter",
-    "part_number": "OF2231",
-    "brand": "Bosch",
-    "compatible_vehicles": "Honda Accord 2016-2021",
+    "id": "p002",
+    "name": "Air Filter",
+    "vehicle": "Honda Civic 2016-2021",
     "category": "Engine",
-    "price": 14.49,
-    "stock_quantity": 300,
-    "description": "Durable oil filter engineered for extended performance and filtration."
+    "price": 14.95,
+    "stock": 50
   },
   {
-    "part_name": "Battery - Group 35",
-    "part_number": "BAT35EX",
-    "brand": "Interstate",
-    "compatible_vehicles": "Nissan Altima 2017-2023",
+    "id": "p003",
+    "name": "Oil Filter",
+    "vehicle": "Ford F-150 2015-2022",
+    "category": "Engine",
+    "price": 9.99,
+    "stock": 100
+  },
+  {
+    "id": "p004",
+    "name": "Headlight Assembly",
+    "vehicle": "Nissan Altima 2013-2018",
+    "category": "Lighting",
+    "price": 89.99,
+    "stock": 12
+  },
+  {
+    "id": "p005",
+    "name": "Battery",
+    "vehicle": "Chevrolet Malibu 2016-2020",
     "category": "Electrical",
     "price": 129.99,
-    "stock_quantity": 75,
-    "description": "12V maintenance-free car battery with 650 CCA and 24-month warranty."
-  },
-  {
-    "part_name": "Cabin Air Filter",
-    "part_number": "CAF1140",
-    "brand": "Fram",
-    "compatible_vehicles": "Ford Escape 2015-2022",
-    "category": "Filters",
-    "price": 19.99,
-    "stock_quantity": 210,
-    "description": "Removes dust, pollen, and contaminants from incoming air for better cabin comfort."
-  },
-  {
-    "part_name": "Headlight Assembly - Driver Side",
-    "part_number": "HDLT328L",
-    "brand": "TYC",
-    "compatible_vehicles": "Chevrolet Malibu 2019-2023",
-    "category": "Lighting",
-    "price": 189.95,
-    "stock_quantity": 42,
-    "description": "OEM-style replacement driver side headlight, DOT compliant with clear lens."
+    "stock": 8
   }
 ]
