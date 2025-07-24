@@ -8,7 +8,6 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      background: #f9f9f9;
     }
     h1 {
       color: #2c3e50;
@@ -42,83 +41,71 @@
 
   <h1>DriveNest Parts Catalogue</h1>
   <input type="search" id="searchInput" placeholder="Search by part name, brand, vehicle, or category..." />
-
-  <div id="partsContainer">
-    <!-- Parts will be displayed here -->
-  </div>
+  <div id="partsContainer">Loading parts...</div>
 
   <script>
-    // Example dataset (you can replace this with your JSON file)
-    const parts = [
-      {
-        id: "DNT001",
-        part_name: "Premium Ceramic Brake Pads - Front Set",
-        part_number: "BP-CERAMIC-F001",
-        brand: "StopTech",
-        compatible_vehicles: ["Honda Accord 2018-2023", "Honda CR-V 2017-2022", "Acura TLX 2015-2020"],
-        category: "brake",
-        price: 89.99,
-        stock_quantity: 24,
-        description: "High-performance ceramic brake pads offering superior stopping power, reduced dust, and extended rotor life."
-      },
-      {
-        id: "DNT002",
-        part_name: "Heavy Duty Car Battery",
-        part_number: "BAT-HD-65",
-        brand: "Interstate",
-        compatible_vehicles: ["Ford F-150 2015-2023", "Ford Explorer 2016-2023", "Lincoln Navigator 2018-2023"],
-        category: "electrical",
-        price: 149.95,
-        stock_quantity: 18,
-        description: "65Ah maintenance-free battery with 650 cold cranking amps."
-      },
-      // Add more parts here or load from your data.json via fetch
-    ];
-
+    let parts = [];
     const partsContainer = document.getElementById('partsContainer');
     const searchInput = document.getElementById('searchInput');
 
-    // Function to render parts to the page
     function renderParts(list) {
-      partsContainer.innerHTML = '';
-      if (list.length === 0) {
+      if (!list.length) {
         partsContainer.innerHTML = '<p>No parts found.</p>';
         return;
       }
+      partsContainer.innerHTML = '';
       list.forEach(part => {
-        const partDiv = document.createElement('div');
-        partDiv.className = 'part-card';
-        partDiv.innerHTML = `
-          <h3>${part.part_name}</h3>
-          <p><strong>Brand:</strong> ${part.brand}</p>
-          <p><strong>Part Number:</strong> ${part.part_number}</p>
-          <p><strong>Category:</strong> ${part.category}</p>
-          <p><strong>Price:</strong> $${part.price.toFixed(2)}</p>
-          <p><strong>Stock:</strong> ${part.stock_quantity}</p>
-          <p><strong>Compatible Vehicles:</strong> ${part.compatible_vehicles.join(', ')}</p>
-          <p>${part.description}</p>
+        partsContainer.innerHTML += `
+          <div class="part-card">
+            <h3>${part.part_name}</h3>
+            <p><strong>Brand:</strong> ${part.brand}</p>
+            <p><strong>Part Number:</strong> ${part.part_number}</p>
+            <p><strong>Category:</strong> ${part.category}</p>
+            <p><strong>Price:</strong> $${part.price.toFixed(2)}</p>
+            <p><strong>Stock:</strong> ${part.stock_quantity}</p>
+            <p><strong>Compatible Vehicles:</strong> ${Array.isArray(part.compatible_vehicles) ? part.compatible_vehicles.join(', ') : part.compatible_vehicles}</p>
+            <p>${part.description}</p>
+          </div>
         `;
-        partsContainer.appendChild(partDiv);
       });
     }
 
-    // Initial render
-    renderParts(parts);
+    // Fetch the JSON file and load parts
+    fetch('parts_json.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to load parts data');
+        return response.json();
+      })
+      .then(data => {
+        // Your JSON wraps parts in a "parts" array
+        parts = data.parts || [];
+        renderParts(parts);
+      })
+      .catch(error => {
+        partsContainer.innerText = 'Error loading parts data.';
+        console.error('Fetch error:', error);
+      });
 
-    // Filter parts by search input
+    // Filter parts on search input
     searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase();
+      const query = searchInput.value.trim().toLowerCase();
       const filtered = parts.filter(part => {
         return (
-          part.part_name.toLowerCase().includes(query) ||
-          part.brand.toLowerCase().includes(query) ||
-          part.part_number.toLowerCase().includes(query) ||
-          part.category.toLowerCase().includes(query) ||
-          part.compatible_vehicles.some(vehicle => vehicle.toLowerCase().includes(query))
+          (part.part_name && part.part_name.toLowerCase().includes(query)) ||
+          (part.brand && part.brand.toLowerCase().includes(query)) ||
+          (part.part_number && part.part_number.toLowerCase().includes(query)) ||
+          (part.category && part.category.toLowerCase().includes(query)) ||
+          (part.compatible_vehicles && (
+            Array.isArray(part.compatible_vehicles)
+              ? part.compatible_vehicles.some(vehicle => vehicle.toLowerCase().includes(query))
+              : part.compatible_vehicles.toLowerCase().includes(query)
+          ))
         );
       });
       renderParts(filtered);
     });
   </script>
+
 </body>
 </html>
+
