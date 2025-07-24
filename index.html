@@ -2,56 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DriveNest Parts Catalogue</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa; }
-    h1 { color: #2c3e50; }
-    .part-card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      background: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
     }
-    .part-card h2 {
-      margin: 0;
-      font-size: 1.2em;
-      color: #007BFF;
+    h1 {
+      color: #2c3e50;
+    }
+    #searchInput {
+      padding: 10px;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .part-card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .part-card h3 {
+      margin: 0 0 8px 0;
+      color: #2980b9;
     }
     .part-card p {
-      margin: 5px 0;
+      margin: 4px 0;
     }
   </style>
 </head>
 <body>
+
   <h1>DriveNest Parts Catalogue</h1>
-  <div id="catalog"></div>
+  <input type="search" id="searchInput" placeholder="Search by part name, brand, vehicle, or category..." />
+
+  <div id="partsContainer">
+    <!-- Parts will be displayed here -->
+  </div>
 
   <script>
-    fetch('data.json')
-      .then(response => response.json())
-      .then(parts => {
-        const container = document.getElementById('catalog');
-        parts.forEach(part => {
-          const card = document.createElement('div');
-          card.className = 'part-card';
-          card.innerHTML = `
-            <h2>${part.part_name}</h2>
-            <p><strong>Brand:</strong> ${part.brand}</p>
-            <p><strong>Part Number:</strong> ${part.part_number}</p>
-            <p><strong>Price:</strong> $${part.price}</p>
-            <p><strong>Stock:</strong> ${part.stock_quantity}</p>
-            <p><strong>Compatible Vehicles:</strong> ${part.compatible_vehicles}</p>
-            <p>${part.description}</p>
-          `;
-          container.appendChild(card);
-        });
-      })
-      .catch(error => {
-        document.getElementById('catalog').innerText = "Failed to load parts: " + error;
+    // Example dataset (you can replace this with your JSON file)
+    const parts = [
+      {
+        id: "DNT001",
+        part_name: "Premium Ceramic Brake Pads - Front Set",
+        part_number: "BP-CERAMIC-F001",
+        brand: "StopTech",
+        compatible_vehicles: ["Honda Accord 2018-2023", "Honda CR-V 2017-2022", "Acura TLX 2015-2020"],
+        category: "brake",
+        price: 89.99,
+        stock_quantity: 24,
+        description: "High-performance ceramic brake pads offering superior stopping power, reduced dust, and extended rotor life."
+      },
+      {
+        id: "DNT002",
+        part_name: "Heavy Duty Car Battery",
+        part_number: "BAT-HD-65",
+        brand: "Interstate",
+        compatible_vehicles: ["Ford F-150 2015-2023", "Ford Explorer 2016-2023", "Lincoln Navigator 2018-2023"],
+        category: "electrical",
+        price: 149.95,
+        stock_quantity: 18,
+        description: "65Ah maintenance-free battery with 650 cold cranking amps."
+      },
+      // Add more parts here or load from your data.json via fetch
+    ];
+
+    const partsContainer = document.getElementById('partsContainer');
+    const searchInput = document.getElementById('searchInput');
+
+    // Function to render parts to the page
+    function renderParts(list) {
+      partsContainer.innerHTML = '';
+      if (list.length === 0) {
+        partsContainer.innerHTML = '<p>No parts found.</p>';
+        return;
+      }
+      list.forEach(part => {
+        const partDiv = document.createElement('div');
+        partDiv.className = 'part-card';
+        partDiv.innerHTML = `
+          <h3>${part.part_name}</h3>
+          <p><strong>Brand:</strong> ${part.brand}</p>
+          <p><strong>Part Number:</strong> ${part.part_number}</p>
+          <p><strong>Category:</strong> ${part.category}</p>
+          <p><strong>Price:</strong> $${part.price.toFixed(2)}</p>
+          <p><strong>Stock:</strong> ${part.stock_quantity}</p>
+          <p><strong>Compatible Vehicles:</strong> ${part.compatible_vehicles.join(', ')}</p>
+          <p>${part.description}</p>
+        `;
+        partsContainer.appendChild(partDiv);
       });
+    }
+
+    // Initial render
+    renderParts(parts);
+
+    // Filter parts by search input
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = parts.filter(part => {
+        return (
+          part.part_name.toLowerCase().includes(query) ||
+          part.brand.toLowerCase().includes(query) ||
+          part.part_number.toLowerCase().includes(query) ||
+          part.category.toLowerCase().includes(query) ||
+          part.compatible_vehicles.some(vehicle => vehicle.toLowerCase().includes(query))
+        );
+      });
+      renderParts(filtered);
+    });
   </script>
 </body>
 </html>
