@@ -1,26 +1,52 @@
 [
   {
-    "id": "DNT001",
-    "part_name": "Premium Ceramic Brake Pads - Front Set",
-    "part_number": "BP-CERAMIC-F001",
-    "brand": "StopTech",
-    "compatible_vehicles": "Honda Accord 2018-2023; Honda CR-V 2017-2022; Acura TLX 2015-2020",
-    "category": "brake",
-    "price": 89.99,
-    "stock_quantity": 24,
-    "description": "High-performance ceramic brake pads offering superior stopping power, reduced dust, and extended rotor life. Perfect for daily driving and light performance use."
+    "part_name": "Brake Pad Set - Front",
+    "part_number": "BP1320F",
+    "brand": "Brembo",
+    "compatible_vehicles": "Toyota Camry 2018-2022",
+    "category": "Brakes",
+    "price": 79.99,
+    "stock_quantity": 120,
+    "description": "High-performance front brake pads offering superior stopping power and reduced brake dust."
   },
   {
-    "id": "DNT002",
-    "part_name": "Heavy Duty Car Battery",
-    "part_number": "BAT-HD-65",
-    "brand": "Interstate",
-    "compatible_vehicles": "Ford F-150 2015-2023; Ford Explorer 2016-2023; Lincoln Navigator 2018-2023",
-    "category": "electrical",
-    "price": 149.95,
-    "stock_quantity": 18,
-    "description": "65Ah maintenance-free battery with 650 cold cranking amps. Features advanced calcium technology for longer life and reliable starting power in all weather conditions."
+    "part_name": "Oil Filter",
+    "part_number": "OF2231",
+    "brand": "Bosch",
+    "compatible_vehicles": "Honda Accord 2016-2021",
+    "category": "Engine",
+    "price": 14.49,
+    "stock_quantity": 300,
+    "description": "Durable oil filter engineered for extended performance and filtration."
   },
-  ...
-  // continue until DNT025
+  {
+    "part_name": "Battery - Group 35",
+    "part_number": "BAT35EX",
+    "brand": "Interstate",
+    "compatible_vehicles": "Nissan Altima 2017-2023",
+    "category": "Electrical",
+    "price": 129.99,
+    "stock_quantity": 75,
+    "description": "12V maintenance-free car battery with 650 CCA and 24-month warranty."
+  },
+  {
+    "part_name": "Cabin Air Filter",
+    "part_number": "CAF1140",
+    "brand": "Fram",
+    "compatible_vehicles": "Ford Escape 2015-2022",
+    "category": "Filters",
+    "price": 19.99,
+    "stock_quantity": 210,
+    "description": "Removes dust, pollen, and contaminants from incoming air for better cabin comfort."
+  },
+  {
+    "part_name": "Headlight Assembly - Driver Side",
+    "part_number": "HDLT328L",
+    "brand": "TYC",
+    "compatible_vehicles": "Chevrolet Malibu 2019-2023",
+    "category": "Lighting",
+    "price": 189.95,
+    "stock_quantity": 42,
+    "description": "OEM-style replacement driver side headlight, DOT compliant with clear lens."
+  }
 ]
