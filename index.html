@@ -1,109 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DriveNest Parts Catalogue</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-      background-color: #f4f4f4;
-    }
-
-    h1 {
-      text-align: center;
-      color: #2e2e2e;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin: 20px 0;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    .card {
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      color: #1a1a1a;
-    }
-
-    .card p {
-      margin: 0.4rem 0;
-    }
-
-    .highlight {
-      background-color: #e8f5e9;
-    }
+    body { font-family: Arial; padding: 20px; }
+    .part { border-bottom: 1px solid #ccc; padding: 10px 0; }
   </style>
 </head>
 <body>
   <h1>DriveNest Parts Catalogue</h1>
-  <input type="text" id="searchBox" placeholder="Search by part name, vehicle, or category...">
-  <div id="catalogue"></div>
+  <input type="text" id="search" placeholder="Search by part name, vehicle, or category..." onkeyup="filterParts()"/>
+  <div id="parts"></div>
 
   <script>
-    async function fetchParts() {
-      const response = await fetch('./data/parts.json');
-      const parts = await response.json();
-      return parts;
-    }
+    let parts = [];
 
-    function createCard(part) {
-      return `
-        <div class="card">
-          <h3>${part.part_name} (${part.part_number})</h3>
-          <p><strong>Brand:</strong> ${part.brand}</p>
-          <p><strong>Category:</strong> ${part.category}</p>
-          <p><strong>Price:</strong> $${part.price}</p>
-          <p><strong>Stock:</strong> ${part.stock_quantity}</p>
-          <p><strong>Compatible Vehicles:</strong> ${part.compatible_vehicles}</p>
-          <p>${part.description}</p>
-        </div>
-      `;
-    }
-
-    function displayParts(parts, query = "") {
-      const container = document.getElementById("catalogue");
-      container.innerHTML = "";
-
-      const filtered = parts.filter(p => {
-        const q = query.toLowerCase();
-        return (
-          p.part_name.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
-          p.compatible_vehicles.toLowerCase().includes(q)
-        );
+    fetch('data/parts.json')
+      .then(res => res.json())
+      .then(data => {
+        parts = data;
+        displayParts(parts);
       });
 
-      if (filtered.length === 0) {
-        container.innerHTML = `<p>No parts found for "${query}".</p>`;
-        return;
-      }
-
-      filtered.forEach(part => {
-        container.innerHTML += createCard(part);
+    function displayParts(partsList) {
+      const container = document.getElementById('parts');
+      container.innerHTML = '';
+      partsList.forEach(part => {
+        container.innerHTML += `
+          <div class="part">
+            <h3>${part.part_name}</h3>
+            <p><strong>Part Number:</strong> ${part.part_number}</p>
+            <p><strong>Brand:</strong> ${part.brand}</p>
+            <p><strong>Compatible Vehicles:</strong> ${part.compatible_vehicles}</p>
+            <p><strong>Category:</strong> ${part.category}</p>
+            <p><strong>Price:</strong> $${part.price}</p>
+            <p><strong>In Stock:</strong> ${part.stock_quantity}</p>
+            <p>${part.description}</p>
+          </div>
+        `;
       });
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const parts = await fetchParts();
-      displayParts(parts);
-
-      document.getElementById("searchBox").addEventListener("input", (e) => {
-        displayParts(parts, e.target.value);
-      });
-    });
+    function filterParts() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const filtered = parts.filter(part =>
+        part.part_name.toLowerCase().includes(query) ||
+        part.compatible_vehicles.toLowerCase().includes(query) ||
+        part.category.toLowerCase().includes(query)
+      );
+      displayParts(filtered);
+    }
   </script>
 </body>
 </html>
