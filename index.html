@@ -8,478 +8,381 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-    }
-    h1 {
+      background: #f8f9fa;
       color: #2c3e50;
     }
-    #searchInput {
-      padding: 10px;
-      width: 100%;
-      max-width: 500px;
+    h1 {
+      color: #2980b9;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
       margin-bottom: 20px;
+    }
+    input[type="search"], select {
+      padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      min-width: 180px;
+      flex-grow: 1;
+      max-width: 300px;
+    }
+    #partsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+      gap: 16px;
+      margin-bottom: 20px;
     }
     .part-card {
       background: white;
       padding: 15px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: box-shadow 0.25s ease;
+    }
+    .part-card:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
     .part-card h3 {
       margin: 0 0 8px 0;
       color: #2980b9;
+      font-size: 1.2em;
     }
     .part-card p {
       margin: 4px 0;
+      font-size: 0.9em;
+    }
+    #pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    #pagination button {
+      padding: 8px 14px;
+      border: none;
+      background-color: #2980b9;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
+    }
+    #pagination button:disabled {
+      background-color: #a0aec0;
+      cursor: not-allowed;
+    }
+    /* Modal styles */
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #modalContent {
+      background: white;
+      border-radius: 8px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    #modalClose {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #2980b9;
+      cursor: pointer;
+      user-select: none;
+    }
+    #modalContent h2 {
+      margin-top: 0;
+      color: #2980b9;
+    }
+    #modalContent p {
+      margin: 10px 0;
+    }
+    @media (max-width: 600px) {
+      #controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      input[type="search"], select {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
   <h1>DriveNest Parts Catalogue</h1>
-  <input type="search" id="searchInput" placeholder="Search by part name, brand, vehicle, or category..." />
+
+  <div id="controls">
+    <input type="search" id="searchInput" placeholder="Search parts by name, brand, vehicle, or category..." />
+    <select id="filterCategory">
+      <option value="">All Categories</option>
+    </select>
+    <select id="filterBrand">
+      <option value="">All Brands</option>
+    </select>
+    <select id="sortOptions">
+      <option value="">Sort By</option>
+      <option value="priceAsc">Price: Low to High</option>
+      <option value="priceDesc">Price: High to Low</option>
+      <option value="stockAsc">Stock: Low to High</option>
+      <option value="stockDesc">Stock: High to Low</option>
+      <option value="brandAsc">Brand: A to Z</option>
+      <option value="brandDesc">Brand: Z to A</option>
+    </select>
+  </div>
+
   <div id="partsContainer">Loading parts...</div>
 
-  <script>
-    let parts = [];
-    const partsContainer = document.getElementById('partsContainer');
-    const searchInput = document.getElementById('searchInput');
+  <div id="pagination"></div>
 
-    function renderParts(list) {
-      if (!list.length) {
-        partsContainer.innerHTML = '<p>No parts found.</p>';
-        return;
+  <!-- Modal for part details -->
+  <div id="modal">
+    <div id="modalContent">
+      <span id="modalClose">&times;</span>
+      <!-- Content dynamically inserted here -->
+    </div>
+  </div>
+
+<script>
+  let parts = [];
+  let filteredParts = [];
+  let currentPage = 1;
+  const partsPerPage = 5;
+
+  const partsContainer = document.getElementById('partsContainer');
+  const searchInput = document.getElementById('searchInput');
+  const filterCategory = document.getElementById('filterCategory');
+  const filterBrand = document.getElementById('filterBrand');
+  const sortOptions = document.getElementById('sortOptions');
+  const pagination = document.getElementById('pagination');
+
+  const modal = document.getElementById('modal');
+  const modalContent = document.getElementById('modalContent');
+  const modalClose = document.getElementById('modalClose');
+
+  // Render part cards for the current page
+  function renderParts(list) {
+    if (!list.length) {
+      partsContainer.innerHTML = '<p>No parts found.</p>';
+      pagination.innerHTML = '';
+      return;
+    }
+    // Pagination slice
+    const startIndex = (currentPage - 1) * partsPerPage;
+    const endIndex = startIndex + partsPerPage;
+    const pageParts = list.slice(startIndex, endIndex);
+
+    partsContainer.innerHTML = '';
+    pageParts.forEach(part => {
+      const div = document.createElement('div');
+      div.className = 'part-card';
+      div.tabIndex = 0;
+      div.innerHTML = `
+        <h3>${part.part_name}</h3>
+        <p><strong>Brand:</strong> ${part.brand}</p>
+        <p><strong>Part Number:</strong> ${part.part_number}</p>
+        <p><strong>Category:</strong> ${part.category}</p>
+        <p><strong>Price:</strong> $${part.price.toFixed(2)}</p>
+        <p><strong>Stock:</strong> ${part.stock_quantity}</p>
+        <p><strong>Compatible Vehicles:</strong> ${Array.isArray(part.compatible_vehicles) ? part.compatible_vehicles.join(', ') : part.compatible_vehicles}</p>
+      `;
+      // Add click event to show modal with details
+      div.addEventListener('click', () => openModal(part));
+      div.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') openModal(part);
+      });
+      partsContainer.appendChild(div);
+    });
+    renderPagination(list.length);
+  }
+
+  // Render pagination buttons
+  function renderPagination(totalItems) {
+    const totalPages = Math.ceil(totalItems / partsPerPage);
+    if(totalPages <= 1) {
+      pagination.innerHTML = '';
+      return;
+    }
+    pagination.innerHTML = '';
+
+    // Previous button
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = 'Prev';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+      if(currentPage > 1) {
+        currentPage--;
+        applyFilters();
       }
-      partsContainer.innerHTML = '';
-      list.forEach(part => {
-        partsContainer.innerHTML += `
-          <div class="part-card">
-            <h3>${part.part_name}</h3>
-            <p><strong>Brand:</strong> ${part.brand}</p>
-            <p><strong>Part Number:</strong> ${part.part_number}</p>
-            <p><strong>Category:</strong> ${part.category}</p>
-            <p><strong>Price:</strong> $${part.price.toFixed(2)}</p>
-            <p><strong>Stock:</strong> ${part.stock_quantity}</p>
-            <p><strong>Compatible Vehicles:</strong> ${Array.isArray(part.compatible_vehicles) ? part.compatible_vehicles.join(', ') : part.compatible_vehicles}</p>
-            <p>${part.description}</p>
-          </div>
-        `;
+    });
+    pagination.appendChild(prevBtn);
+
+    // Page numbers
+    for(let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.textContent = i;
+      pageBtn.disabled = i === currentPage;
+      pageBtn.addEventListener('click', () => {
+        currentPage = i;
+        applyFilters();
+      });
+      pagination.appendChild(pageBtn);
+    }
+
+    // Next button
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+      if(currentPage < totalPages) {
+        currentPage++;
+        applyFilters();
+      }
+    });
+    pagination.appendChild(nextBtn);
+  }
+
+  // Open modal with part details
+  function openModal(part) {
+    modalContent.querySelector('h2')?.remove();
+    modalContent.querySelectorAll('p').forEach(p => p.remove());
+
+    const title = document.createElement('h2');
+    title.textContent = part.part_name;
+    modalContent.insertBefore(title, modalClose.nextSibling);
+
+    const details = [
+      {label: 'Brand', value: part.brand},
+      {label: 'Part Number', value: part.part_number},
+      {label: 'Category', value: part.category},
+      {label: 'Price', value: `$${part.price.toFixed(2)}`},
+      {label: 'Stock', value: part.stock_quantity},
+      {label: 'Compatible Vehicles', value: Array.isArray(part.compatible_vehicles) ? part.compatible_vehicles.join(', ') : part.compatible_vehicles},
+      {label: 'Description', value: part.description}
+    ];
+
+    details.forEach(d => {
+      const p = document.createElement('p');
+      p.innerHTML = `<strong>${d.label}:</strong> ${d.value}`;
+      modalContent.appendChild(p);
+    });
+
+    modal.style.display = 'flex';
+  }
+
+  // Close modal
+  modalClose.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+  modal.addEventListener('click', e => {
+    if(e.target === modal) modal.style.display = 'none';
+  });
+  window.addEventListener('keydown', e => {
+    if(e.key === 'Escape') modal.style.display = 'none';
+  });
+
+  // Apply all filters, search, sort, and reset pagination if needed
+  function applyFilters(resetPage = true) {
+    if(resetPage) currentPage = 1;
+
+    const query = searchInput.value.trim().toLowerCase();
+    const selectedCategory = filterCategory.value;
+    const selectedBrand = filterBrand.value;
+    const sortBy = sortOptions.value;
+
+    filteredParts = parts.filter(part => {
+      const matchSearch = (
+        part.part_name.toLowerCase().includes(query) ||
+        part.brand.toLowerCase().includes(query) ||
+        part.part_number.toLowerCase().includes(query) ||
+        part.category.toLowerCase().includes(query) ||
+        (Array.isArray(part.compatible_vehicles) && part.compatible_vehicles.some(v => v.toLowerCase().includes(query))) ||
+        (!Array.isArray(part.compatible_vehicles) && part.compatible_vehicles.toLowerCase().includes(query))
+      );
+      const matchCategory = selectedCategory ? part.category === selectedCategory : true;
+      const matchBrand = selectedBrand ? part.brand === selectedBrand : true;
+      return matchSearch && matchCategory && matchBrand;
+    });
+
+    // Sort filtered parts
+    if(sortBy) {
+      filteredParts.sort((a,b) => {
+        switch(sortBy) {
+          case 'priceAsc': return a.price - b.price;
+          case 'priceDesc': return b.price - a.price;
+          case 'stockAsc': return a.stock_quantity - b.stock_quantity;
+          case 'stockDesc': return b.stock_quantity - a.stock_quantity;
+          case 'brandAsc': return a.brand.localeCompare(b.brand);
+          case 'brandDesc': return b.brand.localeCompare(a.brand);
+          default: return 0;
+        }
       });
     }
 
-    // Fetch the JSON file and load parts
-    fetch('parts_json.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to load parts data');
-        return response.json();
-      })
-      .then(data => {
-        // Your JSON wraps parts in a "parts" array
-        parts = data.parts || [];
-        renderParts(parts);
-      })
-      .catch(error => {
-        partsContainer.innerText = 'Error loading parts data.';
-        console.error('Fetch error:', error);
-      });
+    renderParts(filteredParts);
+  }
 
-    // Filter parts on search input
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.trim().toLowerCase();
-      const filtered = parts.filter(part => {
-        return (
-          (part.part_name && part.part_name.toLowerCase().includes(query)) ||
-          (part.brand && part.brand.toLowerCase().includes(query)) ||
-          (part.part_number && part.part_number.toLowerCase().includes(query)) ||
-          (part.category && part.category.toLowerCase().includes(query)) ||
-          (part.compatible_vehicles && (
-            Array.isArray(part.compatible_vehicles)
-              ? part.compatible_vehicles.some(vehicle => vehicle.toLowerCase().includes(query))
-              : part.compatible_vehicles.toLowerCase().includes(query)
-          ))
-        );
-      });
-      renderParts(filtered);
-    });{
-  "catalog_info": {
-    "name": "DriveNestTrack Car Parts Catalog",
-    "version": "1.0.0",
-    "created_by": "Ronzoro & Base44 AI",
-    "description": "Open-source car parts database for marketplace applications",
-    "last_updated": "2024-07-23",
-    "total_parts": 25
-  },
-  "parts": [
-    {
-      "id": "DNT001",
-      "part_name": "Premium Ceramic Brake Pads - Front Set",
-      "part_number": "BP-CERAMIC-F001",
-      "brand": "StopTech",
-      "compatible_vehicles": [
-        "Honda Accord 2018-2023",
-        "Honda CR-V 2017-2022",
-        "Acura TLX 2015-2020"
-      ],
-      "category": "brake",
-      "price": 89.99,
-      "stock_quantity": 24,
-      "description": "High-performance ceramic brake pads offering superior stopping power, reduced dust, and extended rotor life. Perfect for daily driving and light performance use."
-    },
-    {
-      "id": "DNT002",
-      "part_name": "Heavy Duty Car Battery",
-      "part_number": "BAT-HD-65",
-      "brand": "Interstate",
-      "compatible_vehicles": [
-        "Ford F-150 2015-2023",
-        "Ford Explorer 2016-2023",
-        "Lincoln Navigator 2018-2023"
-      ],
-      "category": "electrical",
-      "price": 149.95,
-      "stock_quantity": 18,
-      "description": "65Ah maintenance-free battery with 650 cold cranking amps. Features advanced calcium technology for longer life and reliable starting power in all weather conditions."
-    },
-    {
-      "id": "DNT003",
-      "part_name": "High-Flow Engine Air Filter",
-      "part_number": "AF-PERF-334",
-      "brand": "K&N",
-      "compatible_vehicles": [
-        "Toyota Camry 2018-2023",
-        "Toyota RAV4 2019-2023",
-        "Lexus ES 2019-2023"
-      ],
-      "category": "engine",
-      "price": 54.99,
-      "stock_quantity": 32,
-      "description": "Washable, reusable cotton air filter that increases airflow for improved acceleration and engine sound. Million-mile limited warranty included."
-    },
-    {
-      "id": "DNT004",
-      "part_name": "LED Headlight Conversion Kit H11",
-      "part_number": "LED-H11-6000K",
-      "brand": "Philips",
-      "compatible_vehicles": [
-        "Nissan Altima 2016-2023",
-        "Nissan Sentra 2020-2023",
-        "Infiniti Q50 2014-2020"
-      ],
-      "category": "lighting",
-      "price": 79.99,
-      "stock_quantity": 15,
-      "description": "6000K bright white LED headlight bulbs with 160% more light output than standard halogen. Easy plug-and-play installation with built-in cooling system."
-    },
-    {
-      "id": "DNT005",
-      "part_name": "Front Strut Assembly Complete",
-      "part_number": "STRUT-F-MON558",
-      "brand": "Monroe",
-      "compatible_vehicles": [
-        "BMW 3 Series 2012-2018",
-        "BMW X3 2011-2017"
-      ],
-      "category": "suspension",
-      "price": 234.50,
-      "stock_quantity": 8,
-      "description": "Complete strut assembly with coil spring and upper mount. Gas-charged for consistent performance and enhanced ride comfort. Direct OE replacement."
-    },
-    {
-      "id": "DNT006",
-      "part_name": "Mass Air Flow Sensor",
-      "part_number": "MAF-BOSCH-0280",
-      "brand": "Bosch",
-      "compatible_vehicles": [
-        "Mercedes-Benz C-Class 2015-2021",
-        "Mercedes-Benz E-Class 2017-2023",
-        "Mercedes-Benz GLC 2016-2023"
-      ],
-      "category": "engine",
-      "price": 189.75,
-      "stock_quantity": 12,
-      "description": "OEM-quality mass airflow sensor ensuring precise air measurement for optimal fuel economy and engine performance. Direct fit replacement."
-    },
-    {
-      "id": "DNT007",
-      "part_name": "All-Weather Floor Mats Set",
-      "part_number": "MAT-WEATHER-4PC",
-      "brand": "WeatherTech",
-      "compatible_vehicles": [
-        "Chevrolet Silverado 2019-2023",
-        "GMC Sierra 2019-2023"
-      ],
-      "category": "interior",
-      "price": 129.95,
-      "stock_quantity": 20,
-      "description": "Custom-fit all-weather floor liners with raised edges to contain spills and debris. Made from odorless, BPA-free materials in classic black."
-    },
-    {
-      "id": "DNT008",
-      "part_name": "Fuel Pump Assembly Electric",
-      "part_number": "FP-ELEC-E8545M",
-      "brand": "Delphi",
-      "compatible_vehicles": [
-        "Dodge Charger 2011-2019",
-        "Dodge Challenger 2015-2023",
-        "Chrysler 300 2011-2019"
-      ],
-      "category": "fuel_system",
-      "price": 298.00,
-      "stock_quantity": 6,
-      "description": "Complete electric fuel pump module assembly with sending unit and fuel level sensor. Tested to meet OE specifications for reliable fuel delivery."
-    },
-    {
-      "id": "DNT009",
-      "part_name": "Cabin Air Filter Activated Carbon",
-      "part_number": "CAF-CARBON-CF123",
-      "brand": "FRAM",
-      "compatible_vehicles": [
-        "Subaru Outback 2015-2023",
-        "Subaru Legacy 2015-2023",
-        "Subaru Ascent 2019-2023"
-      ],
-      "category": "hvac",
-      "price": 24.99,
-      "stock_quantity": 45,
-      "description": "Activated carbon cabin filter that removes allergens, dust, and odors from incoming air. Easy 15-minute replacement maintains clean cabin air quality."
-    },
-    {
-      "id": "DNT010",
-      "part_name": "Radiator Upper Hose",
-      "part_number": "HOSE-RAD-UP-22055",
-      "brand": "Gates",
-      "compatible_vehicles": [
-        "Ford Mustang 2015-2023",
-        "Ford Focus ST 2013-2018"
-      ],
-      "category": "cooling",
-      "price": 38.75,
-      "stock_quantity": 28,
-      "description": "Premium EPDM rubber radiator hose with reinforced construction. Superior heat and pressure resistance for reliable cooling system performance."
-    },
-    {
-      "id": "DNT011",
-      "part_name": "Rear Brake Rotors Set",
-      "part_number": "ROTOR-R-SET-580",
-      "brand": "Raybestos",
-      "compatible_vehicles": [
-        "Jeep Grand Cherokee 2011-2021",
-        "Dodge Durango 2011-2023"
-      ],
-      "category": "brake",
-      "price": 156.90,
-      "stock_quantity": 14,
-      "description": "Professional-grade disc brake rotors with advanced metallurgy and precision machining. Enhanced cooling vanes prevent warping and extend pad life."
-    },
-    {
-      "id": "DNT012",
-      "part_name": "Windshield Wiper Blade Set",
-      "part_number": "WIPER-ICON-26-16",
-      "brand": "Bosch",
-      "compatible_vehicles": [
-        "Volkswagen Jetta 2011-2018",
-        "Volkswagen Passat 2012-2019",
-        "Audi A4 2009-2016"
-      ],
-      "category": "exterior",
-      "price": 42.50,
-      "stock_quantity": 36,
-      "description": "Icon beam wiper blades with exclusive tension spring technology. Provides streak-free wiping in all weather conditions with easy installation."
-    },
-    {
-      "id": "DNT013",
-      "part_name": "Oxygen Sensor Downstream",
-      "part_number": "O2-SENSOR-DS-234",
-      "brand": "Denso",
-      "compatible_vehicles": [
-        "Toyota Corolla 2014-2022",
-        "Toyota C-HR 2018-2023",
-        "Scion iM 2016-2017"
-      ],
-      "category": "engine",
-      "price": 94.25,
-      "stock_quantity": 22,
-      "description": "Precision-engineered oxygen sensor for accurate air-fuel mixture monitoring. Helps maintain optimal engine performance and emission compliance."
-    },
-    {
-      "id": "DNT014",
-      "part_name": "Power Steering Pump Remanufactured",
-      "part_number": "PS-PUMP-REMAN-20-1006",
-      "brand": "Cardone",
-      "compatible_vehicles": [
-        "Honda Pilot 2009-2015",
-        "Acura MDX 2007-2013"
-      ],
-      "category": "steering",
-      "price": 189.99,
-      "stock_quantity": 9,
-      "description": "Remanufactured power steering pump with new seals and internal components. Tested to ensure smooth, quiet operation and proper pressure output."
-    },
-    {
-      "id": "DNT015",
-      "part_name": "Tail Light Assembly Left",
-      "part_number": "TAIL-L-LED-508",
-      "brand": "TYC",
-      "compatible_vehicles": [
-        "Hyundai Elantra 2017-2020",
-        "Hyundai Elantra GT 2018-2020"
-      ],
-      "category": "lighting",
-      "price": 98.40,
-      "stock_quantity": 16,
-      "description": "DOT and SAE compliant LED tail light assembly with red lens and integrated turn signal. Direct replacement for factory unit."
-    },
-    {
-      "id": "DNT016",
-      "part_name": "Engine Mount Hydraulic Front",
-      "part_number": "ENG-MNT-HYD-5435",
-      "brand": "Febi",
-      "compatible_vehicles": [
-        "Mazda CX-5 2013-2021",
-        "Mazda CX-9 2016-2023",
-        "Mazda 6 2014-2021"
-      ],
-      "category": "engine",
-      "price": 85.60,
-      "stock_quantity": 19,
-      "description": "Hydraulic engine mount designed to reduce vibration and noise transmission. Features durable rubber construction with integrated fluid dampening."
-    },
-    {
-      "id": "DNT017",
-      "part_name": "Serpentine Belt Multi-Rib",
-      "part_number": "BELT-SERP-6PK1865",
-      "brand": "Continental",
-      "compatible_vehicles": [
-        "Kia Sorento 2016-2023",
-        "Kia Optima 2016-2020",
-        "Hyundai Santa Fe 2013-2018"
-      ],
-      "category": "engine",
-      "price": 29.95,
-      "stock_quantity": 42,
-      "description": "High-performance multi-rib serpentine belt with superior flexibility and durability. Engineered to resist stretching, cracking, and premature wear."
-    },
-    {
-      "id": "DNT018",
-      "part_name": "Door Handle Exterior Chrome Right",
-      "part_number": "HANDLE-EXT-CHR-R80587",
-      "brand": "Dorman",
-      "compatible_vehicles": [
-        "Ford Escape 2013-2019",
-        "Ford Focus 2012-2018"
-      ],
-      "category": "exterior",
-      "price": 67.85,
-      "stock_quantity": 25,
-      "description": "Chrome-finished exterior door handle with integrated key cylinder housing. Direct replacement part with OE-style mounting and operation."
-    },
-    {
-      "id": "DNT019",
-      "part_name": "Alternator 140 Amp Remanufactured",
-      "part_number": "ALT-140A-REMAN-210",
-      "brand": "Bosch",
-      "compatible_vehicles": [
-        "Chevrolet Malibu 2016-2023",
-        "Chevrolet Equinox 2018-2023",
-        "Buick Encore 2013-2022"
-      ],
-      "category": "electrical",
-      "price": 245.75,
-      "stock_quantity": 11,
-      "description": "140-amp remanufactured alternator with new bearings, slip rings, and rectifier diodes. Includes pulley and provides reliable charging system performance."
-    },
-    {
-      "id": "DNT020",
-      "part_name": "Control Arm Lower Front Left",
-      "part_number": "CTRL-ARM-L-F-620273",
-      "brand": "Moog",
-      "compatible_vehicles": [
-        "Volvo XC90 2016-2023",
-        "Volvo XC60 2018-2023"
-      ],
-      "category": "suspension",
-      "price": 178.50,
-      "stock_quantity": 13,
-      "description": "Problem Solver lower control arm with enhanced bushings and ball joint. Engineered to address common wear issues and extend service life."
-    },
-    {
-      "id": "DNT021",
-      "part_name": "Spark Plug Set Iridium",
-      "part_number": "SPARK-IRID-6619-4PC",
-      "brand": "NGK",
-      "compatible_vehicles": [
-        "Mitsubishi Outlander 2014-2022",
-        "Mitsubishi Eclipse Cross 2018-2023"
-      ],
-      "category": "engine",
-      "price": 76.00,
-      "stock_quantity": 31,
-      "description": "Set of 4 iridium spark plugs with fine-wire center electrode for improved ignitability and longer life. Provides better fuel economy and reduced emissions."
-    },
-    {
-      "id": "DNT022",
-      "part_name": "Backup Camera Rear View",
-      "part_number": "CAM-BACKUP-HD-720",
-      "brand": "Pioneer",
-      "compatible_vehicles": [
-        "Universal Fit - Most Vehicles 2010-2023"
-      ],
-      "category": "electronics",
-      "price": 129.99,
-      "stock_quantity": 27,
-      "description": "HD 720p backup camera with 170-degree viewing angle and night vision capability. Includes mounting hardware and 20ft extension cable."
-    },
-    {
-      "id": "DNT023",
-      "part_name": "Timing Chain Kit Complete",
-      "part_number": "TIMING-CHAIN-K025578",
-      "brand": "Cloyes",
-      "compatible_vehicles": [
-        "Infiniti G37 2008-2013",
-        "Nissan 370Z 2009-2020",
-        "Infiniti Q60 2014-2017"
-      ],
-      "category": "engine",
-      "price": 387.25,
-      "stock_quantity": 4,
-      "description": "Complete timing chain kit with chains, tensioners, guides, and gaskets. Precision-manufactured components ensure proper valve timing and engine longevity."
-    },
-    {
-      "id": "DNT024",
-      "part_name": "Wheel Bearing Hub Assembly Front",
-      "part_number": "HUB-BEARING-F-515087",
-      "brand": "Timken",
-      "compatible_vehicles": [
-        "Cadillac CTS 2008-2014",
-        "Cadillac STS 2005-2011"
-      ],
-      "category": "wheel_bearing",
-      "price": 143.90,
-      "stock_quantity": 17,
-      "description": "Complete wheel bearing and hub assembly with integrated ABS tone ring. Precision-manufactured for smooth rotation and long service life."
-    },
-    {
-      "id": "DNT025",
-      "part_name": "Catalytic Converter Direct Fit",
-      "part_number": "CAT-CONV-DIR-49905",
-      "brand": "MagnaFlow",
-      "compatible_vehicles": [
-        "Honda Civic 2012-2015",
-        "Acura ILX 2013-2015"
-      ],
-      "category": "exhaust",
-      "price": 289.50,
-      "stock_quantity": 7,
-      "description": "EPA-compliant direct-fit catalytic converter with stainless steel construction. Features advanced catalyst technology for superior emission reduction and performance."
-    }
-  ]
-}
+  // Populate category and brand filters dynamically
+  function populateFilters() {
+    const categories = new Set(parts.map(p => p.category));
+    const brands = new Set(parts.map(p => p.brand));
 
-  </script>
+    categories.forEach(cat => {
+      const option = document.createElement('option');
+      option.value = cat;
+      option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+      filterCategory.appendChild(option);
+    });
+    brands.forEach(brand => {
+      const option = document.createElement('option');
+      option.value = brand;
+      option.textContent = brand;
+      filterBrand.appendChild(option);
+    });
+  }
+
+  // Initial fetch and setup
+  fetch('parts_json.json')
+    .then(response => {
+      if(!response.ok) throw new Error('Failed to load parts data');
+      return response.json();
+    })
+    .then(data => {
+      parts = data.parts || [];
+      populateFilters();
+      applyFilters();
+    })
+    .catch(err => {
+      partsContainer.innerHTML = '<p>Error loading parts data.</p>';
+      console.error(err);
+    });
+
+  // Event listeners for filters and search
+  searchInput.addEventListener('input', () => applyFilters());
+  filterCategory.addEventListener('change', () => applyFilters());
+  filterBrand.addEventListener('change', () => applyFilters());
+  sortOptions.addEventListener('change', () => applyFilters());
+
+</script>
 
 </body>
 </html>
-
